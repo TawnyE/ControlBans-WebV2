@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ControlBans — Advanced Punishment System for Minecraft</title>
+    <meta name="description" content="A complete moderation toolkit for Minecraft networks. Bans, mutes, warnings, auto-escalation, cross-server sync, and more.">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg:#0a0e14;
+            --bg-surface:#111720;
+            --bg-elevated:#161e2a;
+            --border:#1e2838;
+            --border-bright:#2a3850;
+            --text:#a8b3cf;
+            --text-bright:#e8edf5;
+            --text-dim:#6b7689;
+            --blue:#4a9eff;
+            --blue-bright:#6db5ff;
+            --blue-glow:rgba(74,158,255,0.15);
+            --green:#1bd96a;
+            --green-bright:#3deb80;
+            --green-glow:rgba(27,217,106,0.15);
+            --purple:#a78bfa;
+            --yellow:#fbbf24;
+            --red:#f87171;
+        }
+        html{scroll-behavior:smooth}
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+            font-weight:500;background:var(--bg);color:var(--text);line-height:1.7;font-size:16px;
+            -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+            overflow-x:hidden;
+        }
+
+        /* Nav */
+        .nav{
+            position:fixed;top:0;left:0;right:0;z-index:1000;
+            background:rgba(10,14,20,0.85);backdrop-filter:blur(20px);
+            border-bottom:1px solid var(--border);
+            padding:16px 32px;
+            display:flex;align-items:center;justify-content:space-between;
+        }
+        .nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+        .nav-brand-icon{
+            width:36px;height:36px;border-radius:9px;
+            background:linear-gradient(135deg,var(--blue),var(--purple));
+            display:flex;align-items:center;justify-content:center;
+            font-weight:800;font-size:18px;color:#fff;letter-spacing:-0.04em;
+        }
+        .nav-brand-name{font-weight:800;font-size:18px;color:var(--text-bright);letter-spacing:-0.02em}
+        .nav-links{display:flex;align-items:center;gap:8px}
+        .nav-link{
+            color:var(--text-dim);text-decoration:none;font-weight:600;font-size:15px;
+            padding:8px 14px;border-radius:8px;transition:color 0.15s,background 0.15s;
+        }
+        .nav-link:hover{color:var(--text-bright);background:var(--bg-elevated)}
+        .nav-cta{
+            display:inline-flex;align-items:center;gap:8px;
+            background:var(--green);color:#00150a;text-decoration:none;
+            font-weight:700;font-size:15px;padding:9px 18px;border-radius:9px;
+            transition:background 0.15s,transform 0.1s;
+        }
+        .nav-cta:hover{background:var(--green-bright);transform:translateY(-1px)}
+        .nav-cta svg{width:18px;height:18px}
+
+        /* Hero */
+        .hero{
+            min-height:100vh;display:flex;align-items:center;justify-content:center;
+            text-align:center;padding:120px 32px 80px;position:relative;
+        }
+        .hero-bg{position:absolute;inset:0;overflow:hidden;z-index:0}
+        .hero-bg::before{
+            content:'';position:absolute;top:-30%;left:50%;transform:translateX(-50%);
+            width:800px;height:800px;border-radius:50%;
+            background:radial-gradient(circle,var(--blue-glow) 0%,transparent 60%);
+            filter:blur(40px);
+        }
+        .hero-bg::after{
+            content:'';position:absolute;bottom:-20%;right:10%;
+            width:500px;height:500px;border-radius:50%;
+            background:radial-gradient(circle,var(--green-glow) 0%,transparent 60%);
+            filter:blur(40px);
+        }
+        .hero-content{position:relative;z-index:1;max-width:800px}
+        .hero-badge{
+            display:inline-flex;align-items:center;gap:8px;
+            background:var(--bg-surface);border:1px solid var(--border-bright);
+            padding:6px 16px;border-radius:100px;font-size:14px;font-weight:600;
+            color:var(--text-dim);margin-bottom:32px;
+        }
+        .hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+        .hero h1{
+            font-size:64px;font-weight:800;color:var(--text-bright);
+            letter-spacing:-0.03em;line-height:1.1;margin-bottom:24px;
+        }
+        .hero h1 .gradient{
+            background:linear-gradient(135deg,var(--blue-bright),var(--purple));
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+        .hero p{
+            font-size:20px;color:var(--text-dim);margin-bottom:40px;font-weight:500;
+            max-width:600px;margin-left:auto;margin-right:auto;
+        }
+        .hero-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+        .btn{
+            display:inline-flex;align-items:center;gap:10px;
+            padding:14px 28px;border-radius:10px;font-weight:700;font-size:16px;
+            text-decoration:none;transition:all 0.15s;cursor:pointer;border:none;
+        }
+        .btn-primary{
+            background:var(--green);color:#00150a;
+        }
+        .btn-primary:hover{background:var(--green-bright);transform:translateY(-2px);box-shadow:0 8px 24px var(--green-glow)}
+        .btn-primary svg{width:20px;height:20px}
+        .btn-secondary{
+            background:var(--bg-surface);color:var(--text-bright);border:1px solid var(--border-bright);
+        }
+        .btn-secondary:hover{border-color:var(--blue);color:var(--blue-bright);transform:translateY(-2px)}
+        .btn-secondary svg{width:18px;height:18px}
+
+        /* Section */
+        .section{padding:80px 32px;max-width:1100px;margin:0 auto}
+        .section-title{text-align:center;margin-bottom:56px}
+        .section-title h2{
+            font-size:38px;font-weight:800;color:var(--text-bright);
+            letter-spacing:-0.02em;margin-bottom:12px;
+        }
+        .section-title p{font-size:18px;color:var(--text-dim)}
+
+        /* Feature grid */
+        .features{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;
+        }
+        .feature{
+            background:var(--bg-surface);border:1px solid var(--border);border-radius:14px;
+            padding:28px;transition:border-color 0.2s,transform 0.2s;
+        }
+        .feature:hover{border-color:var(--border-bright);transform:translateY(-3px)}
+        .feature-icon{
+            width:44px;height:44px;border-radius:10px;
+            background:var(--blue-glow);display:flex;align-items:center;justify-content:center;
+            margin-bottom:16px;
+        }
+        .feature-icon svg{width:24px;height:24px;color:var(--blue-bright)}
+        .feature h3{font-size:18px;font-weight:700;color:var(--text-bright);margin-bottom:8px}
+        .feature p{font-size:15px;color:var(--text-dim);line-height:1.6}
+
+        /* Stats */
+        .stats{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;
+            padding:56px 32px;max-width:900px;margin:0 auto;text-align:center;
+        }
+        .stat-value{
+            font-size:42px;font-weight:800;
+            background:linear-gradient(135deg,var(--blue-bright),var(--purple));
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            letter-spacing:-0.02em;
+        }
+        .stat-label{font-size:14px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-top:4px}
+
+        /* CTA section */
+        .cta{
+            text-align:center;padding:80px 32px;max-width:700px;margin:0 auto;
+        }
+        .cta h2{font-size:36px;font-weight:800;color:var(--text-bright);margin-bottom:16px;letter-spacing:-0.02em}
+        .cta p{font-size:18px;color:var(--text-dim);margin-bottom:32px}
+
+        /* Footer */
+        .footer{
+            border-top:1px solid var(--border);padding:40px 32px;text-align:center;
+            color:var(--text-dim);font-size:14px;
+        }
+        .footer a{color:var(--text-dim);text-decoration:none;font-weight:600}
+        .footer a:hover{color:var(--blue-bright)}
+
+        /* Responsive */
+        @media(max-width:768px){
+            .nav{padding:12px 16px}
+            .nav-links{gap:4px}
+            .nav-link{padding:6px 8px;font-size:14px}
+            .nav-link-text{display:none}
+            .hero{padding:100px 20px 60px}
+            .hero h1{font-size:40px}
+            .hero p{font-size:17px}
+            .section{padding:60px 20px}
+            .section-title h2{font-size:28px}
+            .stat-value{font-size:32px}
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="index.html" class="nav-brand">
+            <div class="nav-brand-icon">CB</div>
+            <span class="nav-brand-name">ControlBans</span>
+        </a>
+        <div class="nav-links">
+            <a href="#features" class="nav-link"><span class="nav-link-text">Features</span></a>
+            <a href="wiki.html" class="nav-link"><span class="nav-link-text">Documentation</span></a>
+            <a href="https://modrinth.com/plugin/controlbans" class="nav-cta">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 3a7 7 0 017 7c0 .56-.07 1.1-.19 1.62a4.5 4.5 0 00-5.93 5.93A7 7 0 1112 5zm0 3a4 4 0 100 8 4 4 0 000-8z"/></svg>
+                <span>Download</span>
+            </a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                v5.9 — Now with Velocity proxy support
+            </div>
+            <h1>Moderation that <span class="gradient">actually works</span></h1>
+            <p>ControlBans is a complete punishment and moderation system for Minecraft networks. Bans, mutes, warnings, auto-escalation, cross-server sync, and a built-in GUI — all in one plugin.</p>
+            <div class="hero-buttons">
+                <a href="https://modrinth.com/plugin/controlbans" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 3a7 7 0 017 7c0 .56-.07 1.1-.19 1.62a4.5 4.5 0 00-5.93 5.93A7 7 0 1112 5zm0 3a4 4 0 100 8 4 4 0 000-8z"/></svg>
+                    Get it on Modrinth
+                </a>
+                <a href="wiki.html" class="btn btn-secondary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 8.806 5 6.5 5S2.168 5.477 1 6.253v13C2.168 18.477 4.194 18 6.5 18s4.332.477 5.5 1.253m0-13C13.168 5.477 15.194 5 17.5 5S22.832 5.477 24 6.253v13C22.832 18.477 20.806 18 18.5 18s-4.332.477-5.5 1.253"/></svg>
+                    View Documentation
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="features">
+        <div class="section-title">
+            <h2>Everything you need to moderate</h2>
+            <p>From a quick ban to a full multi-server punishment network, ControlBans has you covered.</p>
+        </div>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/><path d="M12 8v4m0 4h.01"/></svg>
+                </div>
+                <h3>Full Punishment Suite</h3>
+                <p>Bans, tempbans, mutes, shadow mutes, warnings, kicks, IP bans, voice mutes, freeze, void jail, and skin bans. 20+ commands out of the box.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                </div>
+                <h3>Auto-Escalation</h3>
+                <p>Define templates with <code>#hashtags</code>. Repeat offenders automatically get harsher punishments based on their history. 34 built-in templates included.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </div>
+                <h3>Cross-Server Sync</h3>
+                <p>Built-in Velocity and BungeeCord support. Punish a player on one server and it applies across your entire network instantly.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+                </div>
+                <h3>Punishment GUI</h3>
+                <p>Staff can open a clickable GUI with <code>/punish</code> to apply common punishments without typing commands. No training required.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+                </div>
+                <h3>Multi-Database</h3>
+                <p>SQLite, MySQL, MariaDB, PostgreSQL, H2, and MongoDB. Start with SQLite and switch to MySQL later without losing any data.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+                </div>
+                <h3>10 Built-in Locales</h3>
+                <p>English, German, Spanish, French, Italian, Japanese, Dutch, Portuguese, Russian, and Turkish. Every message is customizable.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="stats">
+        <div>
+            <div class="stat-value">20+</div>
+            <div class="stat-label">Commands</div>
+        </div>
+        <div>
+            <div class="stat-value">34</div>
+            <div class="stat-label">Templates</div>
+        </div>
+        <div>
+            <div class="stat-value">10</div>
+            <div class="stat-label">Languages</div>
+        </div>
+        <div>
+            <div class="stat-value">6</div>
+            <div class="stat-label">Databases</div>
+        </div>
+    </div>
+
+    <section class="cta">
+        <h2>Ready to get started?</h2>
+        <p>Drop the JAR into your plugins folder and restart. It works immediately — no database setup required.</p>
+        <div class="hero-buttons">
+            <a href="https://modrinth.com/plugin/controlbans" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 3a7 7 0 017 7c0 .56-.07 1.1-.19 1.62a4.5 4.5 0 00-5.93 5.93A7 7 0 1112 5zm0 3a4 4 0 100 8 4 4 0 000-8z"/></svg>
+                Download on Modrinth
+            </a>
+            <a href="wiki.html" class="btn btn-secondary">Read the Docs</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2026 Tawny. All rights reserved. Licensed under the <a href="other-pages/license.html">Truthful and Faithful License</a>.</p>
+    </footer>
+</body>
+</html>

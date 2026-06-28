@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commands — ControlBans</title>
+    <style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0a0e14;--bg-surface:#111720;--bg-elevated:#161e2a;--bg-code:#0d1219;
+--border:#1e2838;--border-bright:#2a3850;
+--text:#a8b3cf;--text-bright:#e8edf5;--text-dim:#6b7689;
+--blue:#4a9eff;--blue-bright:#6db5ff;--blue-glow:rgba(74,158,255,0.12);
+--green:#1bd96a;--green-bright:#3deb80;
+--purple:#a78bfa;--yellow:#fbbf24;--red:#f87171;
+--sidebar-width:260px;--nav-height:60px;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;font-weight:500;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-height);background:rgba(10,14,20,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-brand-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;letter-spacing:-0.04em}
+.nav-brand-name{font-weight:800;font-size:16px;color:var(--text-bright);letter-spacing:-0.02em}
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-link{color:var(--text-dim);text-decoration:none;font-weight:600;font-size:14px;padding:7px 12px;border-radius:7px;transition:color 0.15s,background 0.15s}
+.nav-link:hover{color:var(--text-bright);background:var(--bg-elevated)}
+.nav-link.active{color:var(--blue-bright);background:var(--blue-glow)}
+.nav-cta{display:inline-flex;align-items:center;gap:7px;background:var(--green);color:#00150a;text-decoration:none;font-weight:700;font-size:14px;padding:7px 14px;border-radius:7px;transition:background 0.15s,transform 0.1s}
+.nav-cta:hover{background:var(--green-bright);transform:translateY(-1px)}
+.nav-cta svg{width:16px;height:16px}
+.layout{display:flex;min-height:100vh;padding-top:var(--nav-height)}
+.sidebar{width:var(--sidebar-width);background:var(--bg-surface);border-right:1px solid var(--border);position:fixed;top:var(--nav-height);left:0;bottom:0;overflow-y:auto;padding:24px 0;z-index:100}
+.content-area{margin-left:var(--sidebar-width);flex:1;min-width:0}
+.content{max-width:820px;margin:0 auto;padding:48px 40px 120px}
+.sidebar-section{padding:0 12px;margin-bottom:20px}
+.sidebar-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);padding:0 12px;margin-bottom:6px}
+.sidebar-link{display:block;padding:7px 12px;color:var(--text);text-decoration:none;border-radius:6px;font-weight:600;font-size:14px;transition:background 0.12s,color 0.12s}
+.sidebar-link:hover{background:var(--bg-elevated);color:var(--text-bright)}
+.sidebar-link.active{background:var(--blue-glow);color:var(--blue-bright)}
+h1,h2,h3,h4,h5,h6{font-weight:800;color:var(--text-bright);letter-spacing:-0.02em;line-height:1.3}
+h1{font-size:32px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+h2{font-size:24px;margin-top:44px;margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+h3{font-size:19px;margin-top:32px;margin-bottom:10px}
+h4{font-size:16px;margin-top:20px;margin-bottom:6px}
+p{margin-bottom:14px}
+a{color:var(--blue);text-decoration:none;font-weight:600}
+a:hover{color:var(--blue-bright);text-decoration:underline}
+strong{color:var(--text-bright);font-weight:700}
+em{color:var(--blue-bright);font-style:normal;font-weight:600}
+ul,ol{margin-bottom:14px;padding-left:22px}
+li{margin-bottom:5px}
+li>ul,li>ol{margin-top:5px;margin-bottom:0}
+code{font-family:'SF Mono','Fira Code','Consolas','Courier New',monospace;font-weight:600;font-size:13px;background:var(--bg-code);color:var(--blue-bright);padding:2px 6px;border-radius:4px;border:1px solid var(--border)}
+pre{background:var(--bg-code);border:1px solid var(--border);border-radius:8px;padding:16px 18px;overflow-x:auto;margin-bottom:18px;line-height:1.5}
+pre code{background:none;border:none;padding:0;color:var(--text);font-size:13px;font-weight:500}
+blockquote{border-left:3px solid var(--blue);background:var(--blue-glow);padding:12px 18px;margin:18px 0;border-radius:0 6px 6px 0}
+blockquote p:last-child{margin-bottom:0}
+table{width:100%;border-collapse:collapse;margin-bottom:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+th{background:var(--bg-surface);color:var(--text-bright);font-weight:700;text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;text-transform:uppercase;letter-spacing:0.04em}
+td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;font-size:14px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg-surface)}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:24px 0}
+.card{background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;padding:20px;transition:border-color 0.15s,transform 0.15s}
+.card:hover{border-color:var(--border-bright);transform:translateY(-2px)}
+.card h3{margin-top:0;color:var(--blue-bright);font-size:16px}
+.card p{margin-bottom:0;font-size:14px;color:var(--text-dim)}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em}
+.badge-blue{background:rgba(74,158,255,0.2);color:var(--blue-bright);border:1px solid rgba(74,158,255,0.3)}
+.badge-green{background:rgba(27,217,106,0.15);color:var(--green);border:1px solid rgba(27,217,106,0.3)}
+.badge-yellow{background:rgba(251,191,36,0.15);color:var(--yellow);border:1px solid rgba(251,191,36,0.3)}
+.badge-red{background:rgba(248,113,113,0.15);color:var(--red);border:1px solid rgba(248,113,113,0.3)}
+.callout{border-radius:8px;padding:14px 18px;margin:18px 0;border-left:3px solid}
+.callout-info{background:var(--blue-glow);border-color:var(--blue)}
+.callout-warning{background:rgba(251,191,36,0.08);border-color:var(--yellow)}
+.callout-danger{background:rgba(248,113,113,0.08);border-color:var(--red)}
+.callout-title{font-weight:800;margin-bottom:4px}
+.callout-info .callout-title{color:var(--blue-bright)}
+.callout-warning .callout-title{color:var(--yellow)}
+.callout-danger .callout-title{color:var(--red)}
+.callout p:last-child{margin-bottom:0}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;transition:all 0.15s;border:none;cursor:pointer}
+.btn-primary{background:var(--green);color:#00150a}
+.btn-primary:hover{background:var(--green-bright);transform:translateY(-1px);text-decoration:none}
+.btn-secondary{background:var(--bg-surface);color:var(--text-bright);border:1px solid var(--border-bright)}
+.btn-secondary:hover{border-color:var(--blue);color:var(--blue-bright);text-decoration:none}
+.hero-wiki{text-align:center;padding:40px 0 48px}
+.hero-wiki h1{font-size:40px;border-bottom:none;padding-bottom:0;background:linear-gradient(135deg,var(--blue-bright),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-wiki p{font-size:17px;color:var(--text-dim);margin-top:10px}
+.footer{border-top:1px solid var(--border);margin-top:48px;padding-top:20px;text-align:center;color:var(--text-dim);font-size:13px}
+.footer a{color:var(--text-dim)}
+.footer a:hover{color:var(--blue-bright)}
+.page-nav{display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);gap:14px}
+.page-nav a{display:flex;flex-direction:column;padding:10px 16px;background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;flex:1;max-width:48%;transition:border-color 0.15s}
+.page-nav a:hover{border-color:var(--border-bright);text-decoration:none}
+.page-nav .nav-label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.04em}
+.page-nav .nav-title{font-weight:700;color:var(--text-bright);margin-top:3px;font-size:14px}
+.page-nav a.next{text-align:right}
+.menu-toggle{display:none;position:fixed;top:72px;left:12px;z-index:200;background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text-bright);cursor:pointer;font-size:16px}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:transform 0.25s}.sidebar.open{transform:translateX(0)}.content-area{margin-left:0}.content{padding:32px 16px 80px}.menu-toggle{display:block}h1{font-size:24px}h2{font-size:20px}}
+.sidebar::-webkit-scrollbar{width:5px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}.sidebar::-webkit-scrollbar-thumb:hover{background:var(--text-dim)}
+</style>
+</head>
+<body>
+    <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+        <nav class="nav">
+            <a href="../index.html" class="nav-brand">
+                <div class="nav-brand-icon">CB</div>
+                <span class="nav-brand-name">ControlBans</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="../wiki.html" class="nav-link active">Docs</a>
+                <a href="https://modrinth.com/plugin/controlbans" class="nav-cta">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 3a7 7 0 017 7c0 .56-.07 1.1-.19 1.62a4.5 4.5 0 00-5.93 5.93A7 7 0 1112 5zm0 3a4 4 0 100 8 4 4 0 000-8z"/></svg>
+                    Download
+                </a>
+            </div>
+        </nav>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="sidebar-section"><div class="sidebar-section-title">Documentation</div>
+                <a href="wiki.html" class="sidebar-link">Wiki Home</a>
+                <a href="other-pages/getting-started.html" class="sidebar-link">Installation</a>
+                <a href="other-pages/velocity-setup.html" class="sidebar-link">Velocity Setup</a>
+                <a href="other-pages/commands.html" class="sidebar-link active">Commands</a>
+                <a href="other-pages/permissions.html" class="sidebar-link">Permissions</a>
+                <a href="other-pages/escalation.html" class="sidebar-link">Escalation</a>
+                <a href="other-pages/configuration.html" class="sidebar-link">Configuration</a>
+                <a href="other-pages/troubleshooting.html" class="sidebar-link">Troubleshooting</a>
+                <a href="other-pages/license.html" class="sidebar-link">License</a>
+            </div>
+        </nav>
+        <main class="content-area">
+            <div class="content">
+
+<h1>Commands</h1>
+<p>Every command ControlBans adds. Most commands accept a <code>-s</code> flag before the player name to issue the punishment silently.</p>
+
+<h2>Bans</h2>
+<table><thead><tr><th>Command</th><th>Description</th><th>Permission</th></tr></thead><tbody>
+<tr><td><code>/ban [-s] &lt;player&gt; [reason]</code></td><td>Permanently ban a player.</td><td><code>controlbans.ban</code></td></tr>
+<tr><td><code>/tempban [-s] &lt;player&gt; &lt;time&gt; [reason]</code></td><td>Temporarily ban a player.</td><td><code>controlbans.tempban</code></td></tr>
+<tr><td><code>/unban [-s] &lt;player|ip&gt;</code></td><td>Unban a player or IP.</td><td><code>controlbans.unban</code></td></tr>
+<tr><td><code>/ipban [-s] &lt;player|ip&gt; &lt;time&gt; [reason]</code></td><td>Ban all accounts sharing an IP.</td><td><code>controlbans.ban.ip</code></td></tr>
+<tr><td><code>/unipban &lt;ip&gt;</code></td><td>Unban an IP address.</td><td><code>controlbans.unipban</code></td></tr>
+<tr><td><code>/banlist [page]</code></td><td>View all active bans.</td><td><code>controlbans.banlist</code></td></tr>
+</tbody></table>
+
+<h2>Mutes</h2>
+<table><thead><tr><th>Command</th><th>Description</th><th>Permission</th></tr></thead><tbody>
+<tr><td><code>/mute [-s] &lt;player&gt; [reason]</code></td><td>Permanently mute a player.</td><td><code>controlbans.mute</code></td></tr>
+<tr><td><code>/tempmute [-s] &lt;player&gt; &lt;time&gt; [reason]</code></td><td>Temporarily mute a player.</td><td><code>controlbans.tempmute</code></td></tr>
+<tr><td><code>/shadowmute &lt;player&gt; [reason]</code></td><td>Secretly mute — only they see their messages.</td><td><code>controlbans.shadowmute</code></td></tr>
+<tr><td><code>/unmute [-s] &lt;player&gt;</code></td><td>Unmute a player.</td><td><code>controlbans.unmute</code></td></tr>
+<tr><td><code>/ipmute [-s] &lt;player|ip&gt; &lt;time&gt; [reason]</code></td><td>Mute all accounts sharing an IP.</td><td><code>controlbans.mute.ip</code></td></tr>
+<tr><td><code>/unipmute &lt;ip&gt;</code></td><td>Unmute an IP address.</td><td><code>controlbans.unipmute</code></td></tr>
+<tr><td><code>/mutelist [page]</code></td><td>View all active mutes.</td><td><code>controlbans.mutelist</code></td></tr>
+</tbody></table>
+
+<h2>Warnings &amp; Kicks</h2>
+<table><thead><tr><th>Command</th><th>Description</th><th>Permission</th></tr></thead><tbody>
+<tr><td><code>/warn [-s] &lt;player&gt; [reason]</code></td><td>Issue a formal warning.</td><td><code>controlbans.warn</code></td></tr>
+<tr><td><code>/kick [-s] &lt;player&gt; [reason]</code></td><td>Disconnect a player with a reason.</td><td><code>controlbans.kick</code></td></tr>
+</tbody></table>
+
+<h2>Voice Chat</h2>
+<p>Requires the Simple Voice Chat plugin.</p>
+<table><thead><tr><th>Command</th><th>Description</th><th>Permission</th></tr></thead><tbody>
+<tr><td><code>/voicemute [-s] &lt;player&gt; [reason]</code></td><td>Permanently voice mute.</td><td><code>controlbans.voicemute</code></td></tr>
+<tr><td><code>/tempvoicemute [-s] &lt;player&gt; &lt;time&gt; [reason]</code></td><td>Temporarily voice mute.</td><td><code>controlbans.tempvoicemute</code></td></tr>
+<tr><td><code>/voiceunmute &lt;player&gt;</code></td><td>Unmute in voice chat.</td><td><code>controlbans.voiceunmute</code></td></tr>
+</tbody></table>
+
+<h2>Moderation Tools</h2>
+<table><thead><tr><th>Command</th><th>Description</th><th>Permission</th></tr></thead><tbody>
+<tr><td><code>/freeze &lt;player&gt;</code></td><td>Freeze a player for screenshare.</td><td><code>controlbans.freeze</code></td></tr>
+<tr><td><code>/voidjail &lt;player&gt;</code></td><td>Send a player to the void jail.</td><td><code>controlbans.voidjail</code></td></tr>
+<tr><td><code>/unvoidjail &lt;player&gt;</code></td><td>Release from void jail.</td><td><code>controlbans.voidjail</code></td></tr>
+<tr><td><code>/banskin &lt;player&gt; [reason]</code></td><td>Force default skin.</td><td><code>controlbans.banskin</code></td></tr>
+<tr><td><code>/unbanskin &lt;player&gt;</code></td><td>Restore custom skin access.</td><td><code>controlbans.banskin</code></td></tr>
+<tr><td><code>/chat &lt;lock|slow|clear&gt; [args]</code></td><td>Manage chat.</td><td><code>controlbans.chat</code></td></tr>
+</tbody></table>
+
+<h2>Information &amp; Lookup</h2>
+<table><thead><tr><th>Command</th><th>Description</th><th>Permission</th></tr></thead><tbody>
+<tr><td><code>/check &lt;player|id&gt;</code></td><td>Check if a player is banned/muted, or look up by ID.</td><td><code>controlbans.check</code></td></tr>
+<tr><td><code>/history &lt;player&gt;</code></td><td>View punishment history (GUI).</td><td><code>controlbans.history</code></td></tr>
+<tr><td><code>/alts &lt;player&gt;</code></td><td>View alternate accounts (GUI).</td><td><code>controlbans.alts</code></td></tr>
+<tr><td><code>/blame &lt;staff&gt; [page]</code></td><td>View punishments by a staff member.</td><td><code>controlbans.blame</code></td></tr>
+<tr><td><code>/note &lt;player&gt; [add|remove] [text|index]</code></td><td>Add or view staff notes.</td><td><code>controlbans.note</code></td></tr>
+<tr><td><code>/staff</code></td><td>View online staff.</td><td><code>controlbans.staff</code></td></tr>
+</tbody></table>
+
+<h2>Punishment GUI</h2>
+<table><thead><tr><th>Command</th><th>Description</th><th>Permission</th></tr></thead><tbody>
+<tr><td><code>/punish &lt;player&gt;</code></td><td>Open the punishment GUI.</td><td><code>controlbans.punish</code></td></tr>
+<tr><td><code>/punish &lt;player&gt; #templateKey</code></td><td>Apply a template directly.</td><td><code>controlbans.punish</code></td></tr>
+</tbody></table>
+
+<h2>Reports &amp; Appeals</h2>
+<table><thead><tr><th>Command</th><th>Description</th><th>Permission</th></tr></thead><tbody>
+<tr><td><code>/report &lt;player&gt; &lt;reason&gt;</code></td><td>Report a player.</td><td><code>controlbans.report</code> <span class="badge badge-green">default</span></td></tr>
+<tr><td><code>/reports [resolve &lt;id&gt; &lt;status&gt;]</code></td><td>View or resolve reports.</td><td><code>controlbans.report</code></td></tr>
+<tr><td><code>/appeal &lt;message&gt;</code></td><td>Submit a mute appeal.</td><td><code>controlbans.appeal</code> <span class="badge badge-green">default</span></td></tr>
+</tbody></table>
+
+<h2>Admin</h2>
+<table><thead><tr><th>Command</th><th>Description</th><th>Permission</th></tr></thead><tbody>
+<tr><td><code>/controlbans reload</code></td><td>Reload config and locales.</td><td><code>controlbans.admin</code></td></tr>
+<tr><td><code>/controlbans import &lt;source&gt;</code></td><td>Import from LiteBans, AdvancedBan, or Essentials.</td><td><code>controlbans.admin.import</code></td></tr>
+<tr><td><code>/controlbans export</code></td><td>Export all punishment data.</td><td><code>controlbans.admin.export</code></td></tr>
+<tr><td><code>/controlbans database &lt;...&gt;</code></td><td>Database maintenance.</td><td><code>controlbans.database</code></td></tr>
+<tr><td><code>/controlbans rollback &lt;staff&gt;</code></td><td>Roll back punishments by a staff member.</td><td><code>controlbans.admin.rollback</code></td></tr>
+</tbody></table>
+
+<h2>Time Format</h2>
+<table><thead><tr><th>Input</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>30s</code></td><td>30 seconds</td></tr>
+<tr><td><code>10m</code></td><td>10 minutes</td></tr>
+<tr><td><code>2h</code></td><td>2 hours</td></tr>
+<tr><td><code>7d</code></td><td>7 days</td></tr>
+<tr><td><code>1d12h</code></td><td>1 day and 12 hours (combined)</td></tr>
+<tr><td><code>perm</code></td><td>Permanent (IP ban/mute only)</td></tr>
+</tbody></table>
+
+<h2>Silent Flag</h2>
+<p>Most commands accept <code>-s</code> to issue the punishment silently. Only staff with <code>controlbans.notify.silent</code> see silent punishments.</p>
+<pre><code># Normal ban (broadcast to everyone)
+/ban Connor cheating
+
+# Silent ban (only staff see it)
+/ban -s Connor cheating</code></pre>
+
+<div class="page-nav">
+    <a href="velocity-setup.html"><span class="nav-label">Previous</span><span class="nav-title">← Velocity Setup</span></a>
+    <a href="permissions.html" class="next"><span class="nav-label">Next</span><span class="nav-title">Permissions →</span></a>
+</div>
+<div class="footer"><p>&copy; 2026 Tawny. All rights reserved. Licensed under the <a href="license.html">Truthful and Faithful License</a>.</p></div>
+
+            </div>
+        </main>
+    </div>
+</body>
+</html>
