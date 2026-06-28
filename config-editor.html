@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Config Editor — ControlBans</title>
+    <title>Config Editor | ControlBans</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
     <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -16,7 +19,7 @@
 --purple:#a78bfa;--yellow:#fbbf24;--red:#f87171;
 }
 html{scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;font-weight:500;background:var(--bg);color:var(--text);line-height:1.6;font-size:14px;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;font-weight:500;background:var(--bg);color:var(--text);line-height:1.6;font-size:14px;-webkit-font-smoothing:antialiased}
 
 /* Nav */
 .nav{position:sticky;top:0;z-index:1000;background:rgba(10,14,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
@@ -31,7 +34,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Ar
 .nav-cta:hover{background:var(--green-bright);transform:translateY(-1px)}
 .nav-cta svg{width:14px;height:14px}
 
-/* Layout — top to bottom */
+/* Layout - top to bottom */
 .main{display:flex;flex-direction:column;min-height:calc(100vh - 48px)}
 .editor-section{padding:20px;max-width:1400px;margin:0 auto;width:100%}
 
@@ -83,7 +86,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Ar
 .config-toggle::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;background:var(--text-bright);border-radius:50%;transition:transform 0.2s}
 .config-toggle.on::after{transform:translateX(16px);background:#00150a}
 
-/* Preview panel — sticky on right */
+/* Preview panel - sticky on right */
 .preview-panel{position:sticky;top:64px}
 .preview-header{background:var(--bg-surface);border:1px solid var(--border);border-radius:10px 10px 0 0;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
 .preview-header-title{font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em}
@@ -715,12 +718,12 @@ const DEFAULT_LOCALE = {
   "staff.empty": "<#7FFF7F>✔ No staff online.",
   "staff-alerts.prefix": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃",
   "staff-alerts.ban": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#FF8E8E>permanently banned <white><player> <#FF8E8E>for: <#B0B0B0><reason>",
-  "staff-alerts.tempban": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#FF8E8E>temp-banned <white><player> <#FF8E8E>for <#FFD93D><duration> <#FF8E8E>— <#B0B0B0><reason>",
+  "staff-alerts.tempban": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#FF8E8E>temp-banned <white><player> <#FF8E8E>for <#FFD93D><duration> <#FF8E8E>- <#B0B0B0><reason>",
   "staff-alerts.ipban": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#FF8E8E>IP-banned <white><player> <#FF8E8E>for: <#B0B0B0><reason>",
   "staff-alerts.mute": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#8BC4EA>permanently muted <white><player> <#8BC4EA>for: <#B0B0B0><reason>",
-  "staff-alerts.tempmute": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#8BC4EA>temp-muted <white><player> <#8BC4EA>for <#FFD93D><duration> <#8BC4EA>— <#B0B0B0><reason>",
+  "staff-alerts.tempmute": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#8BC4EA>temp-muted <white><player> <#8BC4EA>for <#FFD93D><duration> <#8BC4EA>- <#B0B0B0><reason>",
   "staff-alerts.voicemute": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#CE93D8>voice muted <white><player> <#CE93D8>for: <#B0B0B0><reason>",
-  "staff-alerts.tempvoicemute": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#CE93D8>temp voice muted <white><player> <#CE93D8>for <#FFD93D><duration> <#CE93D8>— <#B0B0B0><reason>",
+  "staff-alerts.tempvoicemute": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#CE93D8>temp voice muted <white><player> <#CE93D8>for <#FFD93D><duration> <#CE93D8>- <#B0B0B0><reason>",
   "staff-alerts.warn": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#FFCC80>warned <white><player> <#FFCC80>for: <#B0B0B0><reason>",
   "staff-alerts.kick": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#FFAB91>kicked <white><player> <#FFAB91>for: <#B0B0B0><reason>",
   "staff-alerts.freeze": "<gradient:#E74C3C:#C0392B><bold>⚠ STAFF</bold></gradient> <dark_gray>┃ <white><staff> <#80DEEA>froze <white><player><#80DEEA>.",
@@ -1230,7 +1233,7 @@ const DEFAULT_CONFIG = {
         "description": "You must be at least 13 years old",
         "item": "RED_CANDLE",
         "permission": "controlbans.admin",
-        "reason": "Underage — player must be at least 13 years old",
+        "reason": "Underage - player must be at least 13 years old",
         "keywords": [
           "underage",
           "too young"
@@ -1243,9 +1246,9 @@ const DEFAULT_CONFIG = {
       "hate-speech": {
         "type": "ban",
         "display-name": "<red><bold>#Hate-Speech</bold></red>",
-        "description": "Racism, discrimination, or hate speech — zero tolerance",
+        "description": "Racism, discrimination, or hate speech - zero tolerance",
         "item": "RED_CANDLE",
-        "reason": "Hate speech — zero tolerance policy",
+        "reason": "Hate speech - zero tolerance policy",
         "keywords": [
           "hate",
           "racist",
@@ -1280,7 +1283,7 @@ const DEFAULT_CONFIG = {
         "description": "Selling in-game items or currency for real money",
         "item": "RED_CANDLE",
         "permission": "controlbans.admin",
-        "reason": "IRL trading — selling in-game content for real money",
+        "reason": "IRL trading - selling in-game content for real money",
         "keywords": [
           "irl trading",
           "real money",
@@ -1316,7 +1319,7 @@ const DEFAULT_CONFIG = {
         "description": "Death threats or extreme violent threats",
         "item": "RED_CANDLE",
         "permission": "controlbans.admin",
-        "reason": "Extreme threats — violence or death threats",
+        "reason": "Extreme threats - violence or death threats",
         "keywords": [
           "death threat",
           "kill you",
@@ -1372,7 +1375,7 @@ const DEFAULT_CONFIG = {
         "display-name": "#Griefing",
         "description": "Maliciously destroying or stealing player builds",
         "item": "RED_CANDLE",
-        "reason": "Griefing — malicious destruction of player builds",
+        "reason": "Griefing - malicious destruction of player builds",
         "keywords": [
           "grief",
           "destroy",
@@ -1414,7 +1417,7 @@ const DEFAULT_CONFIG = {
         "display-name": "#Combat-Log",
         "description": "Logging out during PvP to avoid death",
         "item": "RED_CANDLE",
-        "reason": "Combat logging — disconnecting during PvP",
+        "reason": "Combat logging - disconnecting during PvP",
         "keywords": [
           "combat log",
           "combatlog",
@@ -1434,7 +1437,7 @@ const DEFAULT_CONFIG = {
         "description": "Using alt accounts to evade an active punishment",
         "item": "RED_CANDLE",
         "permission": "controlbans.mod",
-        "reason": "Ban evasion — using alternate accounts",
+        "reason": "Ban evasion - using alternate accounts",
         "keywords": [
           "alt evade",
           "ban evade",
@@ -1630,7 +1633,7 @@ const DEFAULT_CONFIG = {
         "display-name": "#Voice-Abuse",
         "description": "Screaming or making loud disruptive noises in voice chat",
         "item": "MAGENTA_CANDLE",
-        "reason": "Voice chat abuse — disruptive noises",
+        "reason": "Voice chat abuse - disruptive noises",
         "keywords": [
           "scream",
           "earrape",
@@ -1684,9 +1687,9 @@ const DEFAULT_CONFIG = {
       "chat-warning": {
         "type": "warn",
         "display-name": "#Chat-Warning",
-        "description": "Minor chat infraction — formal warning",
+        "description": "Minor chat infraction - formal warning",
         "item": "YELLOW_CANDLE",
-        "reason": "Minor chat infraction — formal warning",
+        "reason": "Minor chat infraction - formal warning",
         "keywords": [
           "minor",
           "first-time",
@@ -1702,9 +1705,9 @@ const DEFAULT_CONFIG = {
       "minor-grief": {
         "type": "warn",
         "display-name": "#Minor-Grief",
-        "description": "Minor griefing — warning before escalation",
+        "description": "Minor griefing - warning before escalation",
         "item": "YELLOW_CANDLE",
-        "reason": "Minor griefing — formal warning",
+        "reason": "Minor griefing - formal warning",
         "keywords": [
           "minor grief",
           "small grief",
@@ -1722,7 +1725,7 @@ const DEFAULT_CONFIG = {
         "display-name": "#Building",
         "description": "Building violations (out of bounds, floating, inappropriate)",
         "item": "YELLOW_CANDLE",
-        "reason": "Building violations — formal warning",
+        "reason": "Building violations - formal warning",
         "keywords": [
           "building",
           "out of bounds",
@@ -1741,7 +1744,7 @@ const DEFAULT_CONFIG = {
         "display-name": "#Trolling",
         "description": "Intentionally provoking or trolling other players",
         "item": "YELLOW_CANDLE",
-        "reason": "Trolling — intentionally provoking other players",
+        "reason": "Trolling - intentionally provoking other players",
         "keywords": [
           "troll",
           "provoke",
@@ -1761,7 +1764,7 @@ const DEFAULT_CONFIG = {
         "display-name": "#First-Offense",
         "description": "General first warning for minor rule breaks",
         "item": "YELLOW_CANDLE",
-        "reason": "First offense — formal warning",
+        "reason": "First offense - formal warning",
         "keywords": [
           "first",
           "first offense",
@@ -1777,9 +1780,9 @@ const DEFAULT_CONFIG = {
       "kick-combat": {
         "type": "kick",
         "display-name": "#Kick-Combat",
-        "description": "Combat logging — kicked with warning",
+        "description": "Combat logging - kicked with warning",
         "item": "REDSTONE_TORCH",
-        "reason": "Combat logging — disconnected during PvP",
+        "reason": "Combat logging - disconnected during PvP",
         "keywords": [
           "combat log kick",
           "pvp kick"
@@ -1794,10 +1797,10 @@ const DEFAULT_CONFIG = {
       "alt-account": {
         "type": "kick",
         "display-name": "#Alt-Account",
-        "description": "Suspicious alt account — kicked for investigation",
+        "description": "Suspicious alt account - kicked for investigation",
         "item": "REDSTONE_TORCH",
         "permission": "controlbans.mod",
-        "reason": "Suspicious alt account — kicked for investigation",
+        "reason": "Suspicious alt account - kicked for investigation",
         "keywords": [
           "alt account",
           "suspicious alt",
@@ -1813,9 +1816,9 @@ const DEFAULT_CONFIG = {
       "ban-evasion": {
         "type": "kick",
         "display-name": "<gold>#Ban-Evasion</gold>",
-        "description": "Ban evasion attempt — kicked with notice",
+        "description": "Ban evasion attempt - kicked with notice",
         "item": "REDSTONE_TORCH",
-        "reason": "Ban evasion — using an alternate account",
+        "reason": "Ban evasion - using an alternate account",
         "keywords": [
           "evade",
           "ban evade",
@@ -2192,7 +2195,7 @@ let activeLocaleKey = null;
 const previewPlaceholders = {
     '<player>': 'Steve',
     '<staff>': 'Jimmy',
-    '<reason>': 'Hacking — killaura detected',
+    '<reason>': 'Hacking - killaura detected',
     '<duration>': '7 days',
     '<id>': 'ABC12345',
     '<ip>': '192.168.*.*',
@@ -2365,7 +2368,7 @@ function renderConfigPreview() {
     const lang = configData.language || 'en';
 
     let html = `<div class="mc-chat-box">
-        <div class="mc-chat-line" style="color:#8b949e;font-size:12px;">Config Preview — Language: <span style="color:#6db5ff">${lang}</span></div>
+        <div class="mc-chat-line" style="color:#8b949e;font-size:12px;">Config Preview - Language: <span style="color:#6db5ff">${lang}</span></div>
         <div class="mc-chat-line" style="color:#8b949e;font-size:12px;">Broadcast: <span style="color:${broadcastEnabled ? '#1bd96a' : '#f87171'}">${broadcastEnabled ? 'enabled' : 'disabled'}</span> · Silent default: <span style="color:${silentDefault ? '#fbbf24' : '#8b949e'}">${silentDefault ? 'yes' : 'no'}</span></div>
         <div class="mc-chat-line" style="margin-top:8px;">`;
 
@@ -2678,7 +2681,7 @@ function handleFile(file) {
                 renderConfigForm();
                 switchTab('config');
             } else if (parsed.errors || parsed.success || parsed.broadcasts || parsed.prefix || parsed.screens) {
-                // Locale file — merge with defaults
+                // Locale file - merge with defaults
                 localeData = {...DEFAULT_LOCALE, ...flattenYaml(parsed)};
                 showStatus('Locale file loaded! Edit messages on the left.', 'success');
                 renderLocaleList();

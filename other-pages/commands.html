@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commands — ControlBans</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Commands | ControlBans</title>
     <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -16,7 +19,7 @@
 --sidebar-width:260px;--nav-height:60px;
 }
 html{scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;font-weight:500;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;font-weight:500;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-height);background:rgba(10,14,20,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between}
 .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-brand-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;letter-spacing:-0.04em}
@@ -51,7 +54,7 @@ ul,ol{margin-bottom:14px;padding-left:22px}
 li{margin-bottom:5px}
 li>ul,li>ol{margin-top:5px;margin-bottom:0}
 code{font-family:'SF Mono','Fira Code','Consolas','Courier New',monospace;font-weight:600;font-size:13px;background:var(--bg-code);color:var(--blue-bright);padding:2px 6px;border-radius:4px;border:1px solid var(--border)}
-pre{background:var(--bg-code);border:1px solid var(--border);border-radius:8px;padding:16px 18px;overflow-x:auto;margin-bottom:18px;line-height:1.5}
+pre{background:var(--bg-code);border:1px solid var(--border);border-top:2px solid var(--blue);border-radius:8px;padding:16px 18px;overflow-x:auto;margin-bottom:18px;line-height:1.5}
 pre code{background:none;border:none;padding:0;color:var(--text);font-size:13px;font-weight:500}
 blockquote{border-left:3px solid var(--blue);background:var(--blue-glow);padding:12px 18px;margin:18px 0;border-radius:0 6px 6px 0}
 blockquote p:last-child{margin-bottom:0}
@@ -92,17 +95,25 @@ tr:hover td{background:var(--bg-surface)}
 .footer a:hover{color:var(--blue-bright)}
 .page-nav{display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);gap:14px}
 .page-nav a{display:flex;flex-direction:column;padding:10px 16px;background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;flex:1;max-width:48%;transition:border-color 0.15s}
-.page-nav a:hover{border-color:var(--border-bright);text-decoration:none}
+.page-nav a:hover{border-color:var(--border-bright);text-decoration:none;transform:translateY(-2px)}
 .page-nav .nav-label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.04em}
 .page-nav .nav-title{font-weight:700;color:var(--text-bright);margin-top:3px;font-size:14px}
 .page-nav a.next{text-align:right}
 .menu-toggle{display:none;position:fixed;top:72px;left:12px;z-index:200;background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text-bright);cursor:pointer;font-size:16px}
-@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:transform 0.25s}.sidebar.open{transform:translateX(0)}.content-area{margin-left:0}.content{padding:32px 16px 80px}.menu-toggle{display:block}h1{font-size:24px}h2{font-size:20px}}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:transform 0.25s;box-shadow:4px 0 24px rgba(0,0,0,0.4)}.sidebar.open{transform:translateX(0)}.content-area{margin-left:0}.content{padding:32px 16px 80px}.menu-toggle{display:block}h1{font-size:24px}h2{font-size:20px}}
 .sidebar::-webkit-scrollbar{width:5px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}.sidebar::-webkit-scrollbar-thumb:hover{background:var(--text-dim)}
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;opacity:0;transition:opacity 0.25s}
+.sidebar-backdrop.active{display:block;opacity:1}
+table{display:table}
+@media(max-width:900px){
+table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}
+table thead,table tbody{display:table;width:100%;table-layout:auto}
+}
 </style>
 </head>
 <body>
-    <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+    <div class="sidebar-backdrop" onclick="document.querySelector('.sidebar').classList.remove('open');this.classList.remove('active')"></div>
+    <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-backdrop').classList.toggle('active')">☰</button>
         <nav class="nav">
             <a href="../index.html" class="nav-brand">
                 <img src="../controlbans-logo.webp" alt="ControlBans" style="width:32px;height:32px;border-radius:8px">
@@ -121,15 +132,15 @@ tr:hover td{background:var(--bg-surface)}
     <div class="layout">
         <nav class="sidebar">
             <div class="sidebar-section"><div class="sidebar-section-title">Documentation</div>
-                <a href="wiki.html" class="sidebar-link">Wiki Home</a>
-                <a href="other-pages/getting-started.html" class="sidebar-link">Installation</a>
-                <a href="other-pages/velocity-setup.html" class="sidebar-link">Velocity Setup</a>
-                <a href="other-pages/commands.html" class="sidebar-link active">Commands</a>
-                <a href="other-pages/permissions.html" class="sidebar-link">Permissions</a>
-                <a href="other-pages/escalation.html" class="sidebar-link">Escalation</a>
-                <a href="other-pages/configuration.html" class="sidebar-link">Configuration</a>
-                <a href="other-pages/troubleshooting.html" class="sidebar-link">Troubleshooting</a>
-                <a href="other-pages/license.html" class="sidebar-link">License</a>
+                <a href="../wiki.html" class="sidebar-link">Wiki Home</a>
+                <a href="getting-started.html" class="sidebar-link">Installation</a>
+                <a href="velocity-setup.html" class="sidebar-link">Velocity Setup</a>
+                <a href="commands.html" class="sidebar-link active">Commands</a>
+                <a href="permissions.html" class="sidebar-link">Permissions</a>
+                <a href="escalation.html" class="sidebar-link">Escalation</a>
+                <a href="configuration.html" class="sidebar-link">Configuration</a>
+                <a href="troubleshooting.html" class="sidebar-link">Troubleshooting</a>
+                <a href="license.html" class="sidebar-link">License</a>
             </div>
         </nav>
         <main class="content-area">
@@ -152,7 +163,7 @@ tr:hover td{background:var(--bg-surface)}
 <table><thead><tr><th>Command</th><th>Description</th><th>Permission</th></tr></thead><tbody>
 <tr><td><code>/mute [-s] &lt;player&gt; [reason]</code></td><td>Permanently mute a player.</td><td><code>controlbans.mute</code></td></tr>
 <tr><td><code>/tempmute [-s] &lt;player&gt; &lt;time&gt; [reason]</code></td><td>Temporarily mute a player.</td><td><code>controlbans.tempmute</code></td></tr>
-<tr><td><code>/shadowmute &lt;player&gt; [reason]</code></td><td>Secretly mute — only they see their messages.</td><td><code>controlbans.shadowmute</code></td></tr>
+<tr><td><code>/shadowmute &lt;player&gt; [reason]</code></td><td>Secretly mute - only they see their messages.</td><td><code>controlbans.shadowmute</code></td></tr>
 <tr><td><code>/unmute [-s] &lt;player&gt;</code></td><td>Unmute a player.</td><td><code>controlbans.unmute</code></td></tr>
 <tr><td><code>/ipmute [-s] &lt;player|ip&gt; &lt;time&gt; [reason]</code></td><td>Mute all accounts sharing an IP.</td><td><code>controlbans.mute.ip</code></td></tr>
 <tr><td><code>/unipmute &lt;ip&gt;</code></td><td>Unmute an IP address.</td><td><code>controlbans.unipmute</code></td></tr>
